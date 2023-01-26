@@ -1,0 +1,3 @@
+[submodule "container-deployment"]
+	path = src/github.com/sitecore/container-deployment
+	url = https://github.com/Sitecore/container-deployment

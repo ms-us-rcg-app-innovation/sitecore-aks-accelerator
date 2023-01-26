@@ -4,11 +4,26 @@ This project contains resources, documentation, infrastructure as code, and guid
 
 ## Contents
 
+| folder    | description |
+| --------- | ----------- |
+| bootstrap | bootstrap the terraform by creating a storage account for tfstate |
+| src       | the source code including any yaml for kubernetes |
+| terraform | the terraform for creating infrastructure |
+
+
 ## Core Prerequisites
 
+Download the "Installation Guide for Production Environment with Kubernetes" document from [dev.sitecore.net](https://dev.sitecore.net/Downloads/Sitecore_Experience_Platform/100/Sitecore_Experience_Platform_100.aspx)
 
+You will need to download submodules in order to get the files referenced in the submodules. 
+
+```
+# run this after you run git clone
+git submodule update --init --recursive
+```
 
 ## Installation
+
 
 ## Addons
 
