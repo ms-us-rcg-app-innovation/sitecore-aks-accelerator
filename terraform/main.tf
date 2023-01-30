@@ -34,10 +34,6 @@ resource "random_string" "keyvault" {
   upper   = false
 }
 
-resource "random_password" "windows" {
-  length = 16
-}
-
 # Create a Key Vault to hold the kubeconfig and sitecore license
 resource "azurerm_key_vault" "default" {
   name                        = "${var.name}${random_string.keyvault.result}"
@@ -72,6 +68,10 @@ resource "azurerm_key_vault" "default" {
       "Get",
     ]
   }
+}
+
+resource "random_password" "windows" {
+  length = 16  
 }
 
 resource "azurerm_key_vault_secret" "password" {

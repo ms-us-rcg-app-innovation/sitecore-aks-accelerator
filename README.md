@@ -133,6 +133,8 @@ helm install ingress-nginx stable/ingress-nginx `
 ### Deploy the Secrets
 
 ```powershell
+# change into secrets working directory
+cd src\github.com\sitecore\container-deployment\k8s\sxp\10.3\ltsc2019\xm1\secrets
 
 # generate all secrets
 kubectl apply -k ./secrets/
