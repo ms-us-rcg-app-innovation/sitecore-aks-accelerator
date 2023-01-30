@@ -37,7 +37,7 @@ Login to the azure cli
 az login
 ```
 
-Run the bootstrap terraform script
+Run the bootstrap terraform script. You will only need to run this one time. 
 
 ```
 # run from the repository root
