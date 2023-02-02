@@ -10,7 +10,7 @@ terraform {
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
     storage_account_name = "stasitecorelsxhg"
-    resource_group_name = "sitecore-tfstate"
+    resource_group_name  = "sitecore-tfstate"
   }
 }
 
@@ -400,7 +400,7 @@ resource "tls_cert_request" "cert" {
 resource "tls_locally_signed_cert" "cert" {
 
   cert_request_pem = tls_cert_request.cert.cert_request_pem
-  
+
   ca_private_key_pem = tls_private_key.ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.ca.cert_pem
 
