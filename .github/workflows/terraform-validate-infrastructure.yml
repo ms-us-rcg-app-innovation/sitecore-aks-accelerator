@@ -5,10 +5,10 @@ defaults:
     working-directory: terraform
 
 env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   
 # Controls when the workflow will run
 on:
@@ -44,7 +44,12 @@ jobs:
    
       - name: Terraform Init
         id: init 
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config "container_name=tfstate" \
+            -backend-config "key=terraform.tfstate" \
+            -backend-config "storage_account_name=stasitecorelsxhg" \
+            -backend-config "resource_group_name=sitecore-tfstate"
 
       - name: Terraform Validate
         id: validate

@@ -7,10 +7,6 @@ terraform {
   }
 
   backend "azurerm" {
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-    storage_account_name = "stasitecorelsxhg"
-    resource_group_name  = "sitecore-tfstate"
   }
 }
 
