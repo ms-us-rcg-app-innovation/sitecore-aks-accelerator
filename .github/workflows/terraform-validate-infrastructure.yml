@@ -52,5 +52,5 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -var="name=sitecore" -var="location=South Central US"
        
