@@ -41,23 +41,28 @@ Login to the azure cli
 az login
 ```
 
-Run the bootstrap terraform script. You will only need to run this one time. 
+Run the bootstrap terraform script. Assess and adjust any parameter values supplied to the external bootstrap module (region, name, etc.).
+
+**NOTE: The terraform bootstrap action is a one-time execution.**
 
 ```
 # run from the repository root
 cd bootstrap
 terraform init
-terraform plan -var="name=sitecore" -var="location=South Central US"
-terraform apply -var="name=sitecore" -var="location=South Central US" -auto-approve
+terraform plan
+terraform apply -auto-approve
 ```
+
+This action will create a "tfstate" resource group with an Azure Storage Account to store the Terraform state for the application resource group. [Terraform Bootstrap module and documentation](https://github.com/ms-us-rcg-app-innovation/terraform-bootstrap). Acquire the Storage Account name and Access Key for infrasctructure commands.
 
 ### Create Azure Infrastructure
 
-Run terraform init and specify the backend configuration. We are using Azure Blob Storage to store the shared state for the terraform. You can configure your backend using the following documentation https://developer.hashicorp.com/terraform/language/settings/backends/azurerm
+Run terraform init and specify the backend configuration. For configuration details, see the [Terraform documentation](https://developer.hashicorp.com/terraform/language/settings/backends/azurerm).
 
 > bash
 
 ```bash
+# run from terraform directory
 NAME=sitecore
 location="South Central US"
 ARM_RESOURCE_GROUP="${NAME}-tfstate"
@@ -78,9 +83,10 @@ terraform apply -var="name=${NAME}" -var="location=${location}" -auto-approve
 > powershell
 
 ```powershell
+# run from terraform directory
 $location="South Central US"
 $name="sitecore"
-$env:ARM_RESOURCE_GROUP=""
+$env:ARM_RESOURCE_GROUP="${name}-tfstate"
 $env:ARM_STORAGE_ACCOUNT_NAME=""
 $env:ARM_CONTAINER_NAME="tfstate"
 $env:ARM_KEY="terraform.tfstate"

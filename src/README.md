@@ -1,3 +1,8 @@
 # Sitecore Solution
 
-Provide custom Sitecore solution (including all required Sitecore dependencies) at this level. Example: [Sitecore MVP](https://github.com/Sitecore/MVP-Site)
+Use git submodules to reference [Sitecore container-deployment example solution](https://github.com/Sitecore/container-deployment)
+
+```
+# run this after you run git clone
+git submodule update --init --recursive
+```
