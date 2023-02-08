@@ -40,3 +40,15 @@ resource "azurerm_kubernetes_cluster_node_pool" "windows" {
 
   }
 }
+
+resource "azurerm_key_vault_secret" "windowspassword" {
+  name         = "windows-password"
+  value        = random_password.windows.result
+  key_vault_id = azurerm_key_vault.default.id
+}
+
+resource "azurerm_key_vault_secret" "kubeconfig" {
+  name         = "kubeconfig"
+  value        = azurerm_kubernetes_cluster.default.kube_config_raw
+  key_vault_id = azurerm_key_vault.default.id
+}

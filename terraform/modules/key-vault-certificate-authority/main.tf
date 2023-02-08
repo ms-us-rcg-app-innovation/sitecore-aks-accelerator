@@ -1,5 +1,5 @@
 
-resource "azurerm_key_vault_certificate" "cert" {
+resource "azurerm_key_vault_certificate" "ca" {
   name         = var.name
   key_vault_id = var.key_vault_id
 
