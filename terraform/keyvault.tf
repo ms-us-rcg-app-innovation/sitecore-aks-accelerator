@@ -51,28 +51,44 @@ resource "azurerm_key_vault" "default" {
   }
 }
 
+data "azuread_group" "key_valult_users" {
+  display_name     = "sitecore-aks-accelerator-keyvault-reader"
+  security_enabled = true
+}
+
+locals {
+  userids = concat(data.azuread_group.key_valult_users.members, data.azuread_group.key_valult_users.owners)
+}
+
+# key vault doesn't support using aad groups in policy enforcement
+# they must be added individually
+resource "azurerm_key_vault_access_policy" "key_vault_user" {
+  for_each     = toset(local.userids)
+  key_vault_id = azurerm_key_vault.default.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = each.key
+
+  secret_permissions = [
+    "Get",
+    "List",
+    "Set",
+    "Delete",
+    "Recover"
+  ]
+
+  certificate_permissions = [ 
+    "Create",
+    "Get",
+    "Update",
+    "List",
+    "Delete"
+  ]
+}
+
 resource "random_password" "windows" {
   length = 16
 }
 
 resource "random_password" "sql" {
   length = 16
-}
-
-resource "azurerm_key_vault_secret" "windowspassword" {
-  name         = "windows-password"
-  value        = random_password.windows.result
-  key_vault_id = azurerm_key_vault.default.id
-}
-
-resource "azurerm_key_vault_secret" "kubeconfig" {
-  name         = "kubeconfig"
-  value        = azurerm_kubernetes_cluster.default.kube_config_raw
-  key_vault_id = azurerm_key_vault.default.id
-}
-
-resource "azurerm_key_vault_secret" "sqlpassword" {
-  name         = "sql-password"
-  value        = random_password.sql.result
-  key_vault_id = azurerm_key_vault.default.id
 }
