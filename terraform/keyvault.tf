@@ -76,7 +76,7 @@ resource "azurerm_key_vault_access_policy" "key_vault_user" {
     "Recover"
   ]
 
-  certificate_permissions = [ 
+  certificate_permissions = [
     "Create",
     "Get",
     "Update",

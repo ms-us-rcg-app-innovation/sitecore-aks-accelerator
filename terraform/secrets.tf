@@ -1,6 +1,6 @@
-locals{
+locals {
   secrets_yaml = file("${path.module}/secrets.yml")
-  secrets = yamldecode(secrets_yaml)
+  secrets      = yamldecode(secrets_yaml)
 }
 
 module "password" {
@@ -12,11 +12,11 @@ module "password" {
   }
 }
 
-module "certificate" {  
+module "certificate" {
   source = "./modules/key-vault-certificate"
 
-  name = each.key
-  common_name = each.value.options.common_name
+  name         = each.key
+  common_name  = each.value.options.common_name
   organization = each.value.options.organization
   key_vault_id = azurerm_key_vault.default.id
 
@@ -30,8 +30,8 @@ module "certificate" {
 module "value" {
   source = "./modules/key-vault-value"
 
-  name = each.key
-  common_name = each.value.options.common_name
+  name         = each.key
+  common_name  = each.value.options.common_name
   organization = each.value.options.organization
   key_vault_id = azurerm_key_vault.default.id
 
@@ -43,7 +43,7 @@ module "value" {
   }
 }
 
-module "certificate_authority"{
+module "certificate_authority" {
   source = "./modules/key-vault-certificate-authority"
 
 
