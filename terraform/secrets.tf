@@ -1,10 +1,16 @@
 locals {
   secrets_yaml = file("${path.module}/secrets.yml")
-  secrets      = yamldecode(secrets_yaml)
+  secrets      = yamldecode(local.secrets_yaml)
 }
 
 module "password" {
   source = "./modules/key-vault-password"
+
+  key_vault_id = azurerm_key_vault.default.id
+
+  name = each.key
+
+
   for_each = {
     for secret in local.secrets :
     secret.name => secret
@@ -18,6 +24,7 @@ module "certificate" {
   name         = each.key
   common_name  = each.value.options.common_name
   organization = each.value.options.organization
+  ca           = each.value.options.ca
   key_vault_id = azurerm_key_vault.default.id
 
   for_each = {
@@ -30,11 +37,10 @@ module "certificate" {
 module "value" {
   source = "./modules/key-vault-value"
 
-  name         = each.key
-  common_name  = each.value.options.common_name
-  organization = each.value.options.organization
   key_vault_id = azurerm_key_vault.default.id
 
+  name  = each.key
+  value = try(each.value.options.default, "")
 
   for_each = {
     for secret in local.secrets :
@@ -46,7 +52,11 @@ module "value" {
 module "certificate_authority" {
   source = "./modules/key-vault-certificate-authority"
 
+  key_vault_id = azurerm_key_vault.default.id
 
+  name         = each.key
+  common_name  = each.value.options.common_name
+  organization = each.value.options.organization
 
   for_each = {
     for secret in local.secrets :

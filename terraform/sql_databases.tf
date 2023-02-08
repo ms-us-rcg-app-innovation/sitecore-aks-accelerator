@@ -10,7 +10,7 @@ resource "azurerm_mssql_server" "default" {
   location                     = azurerm_resource_group.default.location
   version                      = "12.0"
   administrator_login          = "${var.name}-admin"
-  administrator_login_password = azurerm_key_vault_secret.sqlpassword.value
+  administrator_login_password = module.password["sitecore-database-password"].result
 }
 
 resource "azurerm_mssql_database" "default" {
