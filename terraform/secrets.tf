@@ -18,6 +18,24 @@ module "password" {
   }
 }
 
+
+module "certificate_authority" {
+  source = "./modules/key-vault-certificate-authority"
+
+  key_vault_id = azurerm_key_vault.default.id
+
+  name         = each.key
+  common_name  = each.value.options.common_name
+  organization = each.value.options.organization
+
+  for_each = {
+    for secret in local.secrets :
+    secret.name => secret
+    if secret.type == "certificate-authority"
+  }
+}
+
+
 module "certificate" {
   source = "./modules/key-vault-certificate"
 
@@ -26,6 +44,10 @@ module "certificate" {
   organization = each.value.options.organization
   ca           = each.value.options.ca
   key_vault_id = azurerm_key_vault.default.id
+
+  depends_on = [
+    module.certificate_authority
+  ]
 
   for_each = {
     for secret in local.secrets :
@@ -46,21 +68,5 @@ module "value" {
     for secret in local.secrets :
     secret.name => secret
     if secret.type == "value"
-  }
-}
-
-module "certificate_authority" {
-  source = "./modules/key-vault-certificate-authority"
-
-  key_vault_id = azurerm_key_vault.default.id
-
-  name         = each.key
-  common_name  = each.value.options.common_name
-  organization = each.value.options.organization
-
-  for_each = {
-    for secret in local.secrets :
-    secret.name => secret
-    if secret.type == "certificate-authority"
   }
 }

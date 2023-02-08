@@ -33,7 +33,6 @@ data "azurerm_key_vault_secret" "ca" {
   key_vault_id = var.key_vault_id
 }
 
-
 resource "tls_locally_signed_cert" "cert" {
 
   cert_request_pem = tls_cert_request.cert.cert_request_pem
