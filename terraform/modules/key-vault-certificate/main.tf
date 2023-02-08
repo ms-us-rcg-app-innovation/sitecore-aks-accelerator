@@ -1,9 +1,9 @@
-terraform{
+terraform {
   required_providers {
     pkcs12 = {
-      source = "chilicat/pkcs12"
+      source  = "chilicat/pkcs12"
       version = ">= 0.0.7"
-    }    
+    }
   }
 }
 
@@ -29,7 +29,7 @@ data "azurerm_key_vault_certificate_data" "ca" {
 # when you create a certificate 
 # a secret with the same name is created
 data "azurerm_key_vault_secret" "ca" {
-  name = var.ca
+  name         = var.ca
   key_vault_id = var.key_vault_id
 }
 
@@ -42,16 +42,16 @@ resource "tls_locally_signed_cert" "cert" {
   ca_cert_pem        = data.azurerm_key_vault_certificate_data.ca.pem
 
   validity_period_hours = 17520
-  
+
   allowed_uses = [
     "key_encipherment",
     "digital_signature",
   ]
 }
 
-resource "pkcs12_from_pem" "cert" {    
-  cert_pem = tls_locally_signed_cert.cert.cert_pem
-  private_key_pem  = tls_private_key.cert.value
+resource "pkcs12_from_pem" "cert" {
+  cert_pem        = tls_locally_signed_cert.cert.cert_pem
+  private_key_pem = tls_private_key.cert.value
 }
 
 resource "azurerm_key_vault_certificate" "cert" {
