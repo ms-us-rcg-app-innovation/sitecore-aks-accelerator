@@ -36,6 +36,15 @@ resource "azurerm_key_vault" "default" {
       "List"
     ]
 
+    certificate_permissions = [
+      "Create",
+      "Get",
+      "Import",
+      "Delete",
+      "Update",
+      "List"
+    ]
+
     storage_permissions = [
       "Get",
     ]
@@ -46,7 +55,11 @@ resource "random_password" "windows" {
   length = 16
 }
 
-resource "azurerm_key_vault_secret" "password" {
+resource "random_password" "sql" {
+  length = 16
+}
+
+resource "azurerm_key_vault_secret" "windowspassword" {
   name         = "windows-password"
   value        = random_password.windows.result
   key_vault_id = azurerm_key_vault.default.id
@@ -55,5 +68,11 @@ resource "azurerm_key_vault_secret" "password" {
 resource "azurerm_key_vault_secret" "kubeconfig" {
   name         = "kubeconfig"
   value        = azurerm_kubernetes_cluster.default.kube_config_raw
+  key_vault_id = azurerm_key_vault.default.id
+}
+
+resource "azurerm_key_vault_secret" "sqlpassword" {
+  name         = "sql-password"
+  value        = random_password.sql.result
   key_vault_id = azurerm_key_vault.default.id
 }

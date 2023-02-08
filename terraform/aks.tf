@@ -11,7 +11,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   windows_profile {
-    admin_password = azurerm_key_vault_secret.password.value
+    admin_password = azurerm_key_vault_secret.windowspassword.value
     admin_username = "${var.name}admin"
   }
 
