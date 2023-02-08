@@ -212,7 +212,7 @@ locals {
 
 resource "random_password" "secrets" {
   for_each = {
-    for secret in local.secrets:
+    for secret in local.secrets :
     secret.name => secret
     if secret.type == "password"
   }
@@ -221,7 +221,7 @@ resource "random_password" "secrets" {
 
 resource "azurerm_key_vault_secret" "secrets_passwords" {
   for_each = {
-    for secret in local.secrets:
+    for secret in local.secrets :
     secret.name => secret
     if secret.type == "password"
   }

@@ -60,16 +60,16 @@ resource "random_password" "signed_cert" {
 }
 
 resource "pkcs12_from_pem" "cert_pks" {
-  password = random_password.signed_cert.result
-  cert_pem = tls_locally_signed_cert.cert.cert_pem
-  private_key_pem  = tls_private_key.cert.private_key_pem
+  password        = random_password.signed_cert.result
+  cert_pem        = tls_locally_signed_cert.cert.cert_pem
+  private_key_pem = tls_private_key.cert.private_key_pem
 }
 
 resource "azurerm_key_vault_certificate" "cert" {
   name         = "tls"
   key_vault_id = azurerm_key_vault.default.id
 
-  
+
   certificate {
     contents = pkcs12_from_pem.cert_pks.result
     password = random_password.signed_cert.result
