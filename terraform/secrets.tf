@@ -4,7 +4,7 @@ locals {
   secrets = [
     {
       name     = "sitecore-license",
-      type     = "value",
+      type     = "license", // changed from "value" since license needs to be a specific/static value
       topology = ["XM1", "XP1"]
     },
     {
@@ -148,16 +148,6 @@ locals {
       topology = ["XP1"]
     },
     {
-      name     = "sitecore-processing-engine-storage-database-username",
-      type     = "value",
-      topology = ["XP1"]
-    },
-    {
-      name     = "sitecore-processing-engine-storage-database-password",
-      type     = "password",
-      topology = ["XP1"]
-    },
-    {
       name     = "sitecore-processing-engine-tasks-database-password",
       type     = "password",
       topology = ["XP1"]
@@ -218,4 +208,24 @@ locals {
       topology = ["XP1"]
     }
   ]
+}
+
+resource "random_password" "secrets" {
+  for_each = {
+    for secret in local.secrets:
+    secret.name => secret
+    if secret.type == "password"
+  }
+  length = 16
+}
+
+resource "azurerm_key_vault_secret" "secrets_passwords" {
+  for_each = {
+    for secret in local.secrets:
+    secret.name => secret
+    if secret.type == "password"
+  }
+  name         = each.value.name
+  value        = random_password.secrets[each.value.name].result
+  key_vault_id = azurerm_key_vault.default.id
 }
