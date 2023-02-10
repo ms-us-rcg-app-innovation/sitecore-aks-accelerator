@@ -70,3 +70,18 @@ module "value" {
     if secret.type == "value"
   }
 }
+
+module "file" {
+  source = "./modules/key-vault-value"
+
+  key_vault_id = azurerm_key_vault.default.id
+
+  name  = each.key
+  value = file(each.value.options.path)
+
+  for_each = {
+    for secret in local.secrets :
+    secret.name => secret
+    if secret.type == "file"
+  }
+}

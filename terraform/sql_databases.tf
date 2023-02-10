@@ -1,3 +1,12 @@
+locals {
+  databases = [
+    "Core",
+    "Master",
+    "Web",
+    "Forms"
+  ]
+}
+
 resource "random_string" "sql" {
   length  = 5
   special = false
@@ -14,7 +23,8 @@ resource "azurerm_mssql_server" "default" {
 }
 
 resource "azurerm_mssql_database" "default" {
-  name           = "${var.name}-db"
+  for_each       = toset(local.databases)
+  name           = "Sitecore.${each.key}"
   server_id      = azurerm_mssql_server.default.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
