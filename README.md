@@ -13,14 +13,20 @@ This project contains resources, documentation, infrastructure as code, and guid
 
 ## Core Prerequisites
 
+### Review Sitecore Documentation
+
 Download the "Installation Guide for Production Environment with Kubernetes" document from [dev.sitecore.net](https://dev.sitecore.net/Downloads/Sitecore_Experience_Platform/103/Sitecore_Experience_Platform_103.aspx)
 
-You will need to download submodules in order to get the files referenced in the submodules. 
+### Establish Submodule
+
+Download submodules in order to get the files referenced in the submodules. This is to load [Sitecore's container deployment project](https://github.com/Sitecore/container-deployment) into this repository for reference. 
 
 ```
 # run this after you run git clone
 git submodule update --init --recursive
 ```
+
+### Install CLIs
 
 * Install [Helm](https://helm.sh/docs/intro/install)
 * Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/#install-nonstandard-package-tools)
@@ -30,6 +36,10 @@ git submodule update --init --recursive
 ```
 choco install helm kubectl azure-cli terraform -y
 ```
+
+### Provide Sitecore License
+
+Place Sitecore license file named _sitecore-license.txt_ in repository root directory. This license must be a valid, compressed license. If not compressed, use /scripts/compressLicense.ps1.
 
 ## Installation
 
