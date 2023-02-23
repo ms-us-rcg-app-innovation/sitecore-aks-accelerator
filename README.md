@@ -39,7 +39,7 @@ choco install helm kubectl azure-cli terraform -y
 
 ### Provide Sitecore License
 
-Place Sitecore license file named _sitecore-license.txt_ in repository root directory. This license must be a valid, compressed license. If not compressed, use /scripts/compressLicense.ps1.
+Place Sitecore license file named _sitecore-license.txt_ in repository root directory. This license must be a valid, compressed license. If not compressed, use /scripts/CompressLicense.ps1.
 
 ## Installation
 
@@ -153,11 +153,13 @@ helm install ingress-nginx stable/ingress-nginx `
 ### Deploy the Secrets
 
 ```powershell
-# change into secrets working directory
-cd src\github.com\sitecore\container-deployment\k8s\sxp\10.3\ltsc2019\xm1\secrets
+# add secrets store csi driver
+# helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+# helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system --set windows.enabled=true
 
-# generate all secrets
-kubectl apply -k ./secrets/
+helm repo add csi-secrets-store-provider-azure https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
+helm install csi csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --namespace kube-system --set windows.enabled=true
+
 ```
 
 ## Addons

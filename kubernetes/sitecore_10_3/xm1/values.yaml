@@ -1,0 +1,101 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Ref - https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret.html
+syncSecret:
+  enabled: true
+
+windows:
+  enabled: true
+
+hostnames:
+  cd: "cd.globalhost"
+  cm: "cm.globalhost"
+  id: "id.globalhost"
+
+keyVault:
+ identity: ""
+ name: ""
+ tenantId: ""
+
+bases:
+- configmaps
+
+images:
+- name: sitecore-xm1-cd
+  newName: scr.sitecore.com/sxp/sitecore-xm1-cd
+  newTag: 10.3-ltsc2019
+- name: sitecore-xm1-cm
+  newName: scr.sitecore.com/sxp/sitecore-xm1-cm
+  newTag: 10.3-ltsc2019
+- name: sitecore-xm1-id
+  newName: scr.sitecore.com/sxp/sitecore-id7
+  newTag: 10.3-ltsc2019
+
+- name: mssql
+  newName: mcr.microsoft.com/mssql/server
+  newTag: 2017-CU21-ubuntu-16.04
+- name: redis
+  newName: redis
+  newTag: 4.0.14-alpine
+- name: solr
+  newName: solr
+  newTag: 8.11.2
+
+- name: sitecore-xm1-mssql-init
+  newName: scr.sitecore.com/sxp/sitecore-xm1-mssql-init
+  newTag: 10.3-ltsc2019
+- name: sitecore-xm1-solr-init
+  newName: scr.sitecore.com/sxp/sitecore-xm1-solr-init
+  newTag: 10.3-ltsc2019
+
+- name: sitecore-xm1-solr-init-searchstax
+  newName: scr.sitecore.com/sxp/sitecore-xm1-solr-init-searchstax
+  newTag: 10.3-ltsc2019
+
+
+resources:
+  - cm.yaml
+  - cd.yaml
+  - id.yaml
+
+  - mssql.yaml
+  - redis.yaml
+  - solr.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: sitecore-hostnames
+  files:
+  - cd-hostname
+  - cm-hostname
+  - id-hostname
+
+vars:
+- name: cm-hostname
+  objref:
+    kind: ConfigMap
+    name: sitecore-hostnames
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.cm-hostname
+- name: id-hostname
+  objref:
+    kind: ConfigMap
+    name: sitecore-hostnames
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.id-hostname
+
+secretGenerator:
+- name: sitecore-admin
+  files:
+  - sitecore-adminpassword.txt
+- name: global-id-tls
+  files:
+    - tls/global-id/tls.key
+    - tls/global-id/tls.crt
+  type: kubernetes.io/tls
+

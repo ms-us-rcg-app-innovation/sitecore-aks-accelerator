@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cm
+  name: cd
 spec:
   selector:
-    app: cm
+    app: cd
   ports:
   - protocol: TCP
     port: 80
@@ -12,24 +12,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cm
+  name: cd
   labels:
-    app: cm
+    app: cd
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cm
+      app: cd
   template:
     metadata:
       labels:
-        app: cm
+        app: cd
     spec:
       nodeSelector:
         kubernetes.io/os: windows
       containers:
-      - name: sitecore-xm1-cm
-        image: sitecore-xm1-cm
+      - name: sitecore-xm1-cd
+        image: sitecore-xm1-cd
         ports:
         - containerPort: 80
         env:
@@ -41,88 +41,54 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseservername.txt
-        - name: Master_Database_Username
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-database
-              key: sitecore-master-database-username.txt
-        - name: Master_Database_Password
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-database
-              key: sitecore-master-database-password.txt
+              key: sitecore-databaseservername
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-core-database-username.txt
+              key: sitecore-core-database-username
         - name: Core_Database_Password
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-core-database-password.txt
+              key: sitecore-core-database-password
         - name: Web_Database_Username
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-web-database-username.txt
+              key: sitecore-web-database-username
         - name: Web_Database_Password
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-web-database-password.txt
+              key: sitecore-web-database-password
         - name: Forms_Database_Username
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-forms-database-username.txt
+              key: sitecore-forms-database-username
         - name: Forms_Database_Password
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-forms-database-password.txt
-        - name: Sitecore_ConnectionStrings_Sitecoreidentity.secret
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-identity
-              key: sitecore-identitysecret.txt
-        - name: Sitecore_AppSettings_Telerik.AsyncUpload.ConfigurationEncryptionKey
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-telerik
-              key: sitecore-telerikencryptionkey.txt
-        - name: Sitecore_AppSettings_Telerik.Upload.ConfigurationHashKey
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-telerik
-              key: sitecore-telerikencryptionkey.txt
-        - name: Sitecore_AppSettings_Telerik.Web.UI.DialogParametersEncryptionKey
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-telerik
-              key: sitecore-telerikencryptionkey.txt
+              key: sitecore-forms-database-password
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:
               name: sitecore-license
-              key: sitecore-license.txt
+              key: sitecore-license
         - name: Sql_Database_Prefix
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseprefix.txt
+              key: sitecore-databaseprefix
         - name: LOG_LEVEL_VALUE
           valueFrom:
             secretKeyRef:
               name: sitecore-log-level
-              key: sitecore-log-level-value.txt
-        - name: Sitecore_ConnectionStrings_Core
-          value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);
+              key: sitecore-log-level-value
         - name: Sitecore_ConnectionStrings_Security
           value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);
-        - name: Sitecore_ConnectionStrings_Master
-          value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Master;User ID=$(Master_Database_Username);Password=$(Master_Database_Password);
         - name: Sitecore_ConnectionStrings_Web
           value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Web;User ID=$(Web_Database_Username);Password=$(Web_Database_Password);
         - name: Sitecore_ConnectionStrings_ExperienceForms
@@ -131,34 +97,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-solr
-              key: sitecore-solr-connection-string.txt
-        - name: Sitecore_GraphQL_Enabled
-          value: "false"
-        - name: Sitecore_GraphQL_ExposePlayground
-          value: "false"
-        - name: Sitecore_GraphQL_UploadMediaOptions_EncryptionKey
-          valueFrom:
-            secretKeyRef:
-              name: sitecore-graphql
-              key: sitecore-graphql-uploadmedia_encryptionkey.txt
-        - name: Sitecore_Identity_Server_Authority
-          value: https://$(id-hostname)
-        - name: Sitecore_Identity_Server_CallbackAuthority
-          value: https://$(cm-hostname)
-        - name: Sitecore_Identity_Server_InternalAuthority
-          value: http://id
-        - name: Sitecore_Identity_Server_Require_Https
-          value: "false"
+              key: sitecore-solr-connection-string
+        - name: Sitecore_ConnectionStrings_Redis.Sessions
+          value: redis:6379,ssl=False,abortConnect=False
         - name: SOLR_CORE_PREFIX_NAME
           valueFrom:
             secretKeyRef:
               name: sitecore-solr
-              key: sitecore-solr-core-prefix-name.txt
+              key: sitecore-solr-core-prefix-name
         - name: MEDIA_REQUEST_PROTECTION_SHARED_SECRET
           valueFrom:
             secretKeyRef:
               name: sitecore-protect-media-requests
-              key: sitecore-media-request-protection-shared-secret.txt
+              key: sitecore-media-request-protection-shared-secret
         livenessProbe:
           httpGet:
             path: /healthz/live
@@ -182,7 +133,11 @@ spec:
         volumeMounts:
         - mountPath: C:\inetpub\wwwroot\App_Data\logs
           name: logs
-          subPath: cm
+          subPath: cd
+        - mountPath: C:\inetpub\wwwroot\App_Data\DeviceDetection
+          name: device-detection     
+        - mountPath: C:\inetpub\wwwroot\App_Data\Secrets
+          name: secrets-store 
         resources:
           requests:
             memory: 2500Mi
@@ -194,5 +149,14 @@ spec:
       - name: logs
         persistentVolumeClaim:
           claimName: logs
+      - name: device-detection
+        persistentVolumeClaim:
+          claimName: device-detection
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: keyvault-secretproviderclass
       imagePullSecrets:
       - name: sitecore-docker-registry

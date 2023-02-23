@@ -17,11 +17,21 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-solr
-              key: sitecore-solr-connection-string.txt
+              key: sitecore-solr-connection-string
         - name: SOLR_CORE_PREFIX_NAME
           valueFrom:
             secretKeyRef:
               name: sitecore-solr
-              key: sitecore-solr-core-prefix-name.txt
+              key: sitecore-solr-core-prefix-name
+        volumeMounts:
+        - mountPath: C:\Secrets
+          name: secrets-store 
       restartPolicy: Never
+    volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: keyvault-secretproviderclass
   backoffLimit: 5

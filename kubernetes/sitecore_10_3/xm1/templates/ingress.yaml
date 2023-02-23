@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "512m"
 spec:
   rules:
-  - host: $(cd-hostname)
+  - host: {{ .Values.hostnames.cd }}
     http:
       paths:
       - path: /
@@ -23,7 +23,7 @@ spec:
             name: cd
             port: 
               number: 80
-  - host: $(cm-hostname)
+  - host: {{ .Values.hostnames.cm }}
     http:
       paths:
       - path: /
@@ -33,7 +33,7 @@ spec:
             name: cm
             port: 
               number: 80
-  - host: $(id-hostname)
+  - host: {{ .Values.hostnames.id }}
     http:
       paths:
       - path: /
@@ -46,10 +46,10 @@ spec:
   tls:
   - secretName: global-cd-tls
     hosts:
-    - $(cd-hostname)
+    - {{ .Values.hostnames.cd }}
   - secretName: global-cm-tls
     hosts:
-    - $(cm-hostname)
+    - {{ .Values.hostnames.cm }}
   - secretName: global-id-tls
     hosts:
-    - $(id-hostname)
+    - {{ .Values.hostnames.id }}

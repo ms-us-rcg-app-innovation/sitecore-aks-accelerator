@@ -57,8 +57,10 @@ data "azuread_group" "key_valult_users" {
 }
 
 locals {
-  userids = concat(data.azuread_group.key_valult_users.members, data.azuread_group.key_valult_users.owners)
+  userids = concat(data.azuread_group.key_valult_users.members,
+    data.azuread_group.key_valult_users.owners)
 }
+
 
 # key vault doesn't support using aad groups in policy enforcement
 # they must be added individually
@@ -92,3 +94,4 @@ resource "random_password" "windows" {
 resource "random_password" "sql" {
   length = 16
 }
+

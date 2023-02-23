@@ -37,50 +37,50 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseservername.txt
+              key: sitecore-databaseservername
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-core-database-username.txt
+              key: sitecore-core-database-username
         - name: Core_Database_Password
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-core-database-password.txt
+              key: sitecore-core-database-password
         - name: Sitecore_Sitecore__IdentityServer__Clients__PasswordClient__ClientSecrets__ClientSecret1
           valueFrom:
             secretKeyRef:
               name: sitecore-identity
-              key: sitecore-identitysecret.txt
+              key: sitecore-identitysecret
         - name: Sitecore_Sitecore__IdentityServer__CertificateRawData
           valueFrom:
             secretKeyRef:
               name: sitecore-identitycertificate
-              key: sitecore-identitycertificate.txt
+              key: sitecore-identitycertificate
         - name: Sitecore_Sitecore__IdentityServer__CertificateRawDataPassword
           valueFrom:
             secretKeyRef:
               name: sitecore-identitycertificate
-              key: sitecore-identitycertificatepassword.txt
+              key: sitecore-identitycertificatepassword
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:
               name: sitecore-license
-              key: sitecore-license.txt
+              key: sitecore-license
         - name: Sql_Database_Prefix
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseprefix.txt
+              key: sitecore-databaseprefix
         - name: Sitecore_Sitecore__IdentityServer__SitecoreMemberShipOptions__ConnectionString
           value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);
         - name: Sitecore_Sitecore__IdentityServer__AccountOptions__PasswordRecoveryUrl
-          value: https://$(cm-hostname)/sitecore/login?rc=1
+          value: https://{{ .Values.hostnames.cm }}/sitecore/login?rc=1
         - name: Sitecore_Sitecore__IdentityServer__Clients__DefaultClient__AllowedCorsOrigins__AllowedCorsOriginsGroup1
-          value: https://$(cm-hostname)
+          value: https://{{ .Values.hostnames.cm }}
         - name: Sitecore_Sitecore__IdentityServer__PublicOrigin
-          value: https://$(id-hostname)
+          value: https://{{ .Values.hostnames.id }}
         livenessProbe:
           httpGet:
             path: /healthz/live
@@ -105,6 +105,8 @@ spec:
         - mountPath: C:\Identity\logs
           name: logs
           subPath: id
+        - mountPath: C:\inetpub\wwwroot\App_Data\Secrets
+          name: secrets-store 
         resources:
           requests:
             memory: 700Mi
@@ -116,5 +118,11 @@ spec:
       - name: logs
         persistentVolumeClaim:
           claimName: logs
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: keyvault-secretproviderclass
       imagePullSecrets:
       - name: sitecore-docker-registry

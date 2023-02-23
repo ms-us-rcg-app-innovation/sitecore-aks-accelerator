@@ -42,12 +42,14 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databasepassword.txt
+              key: sitecore-databasepassword
         - name: ACCEPT_EULA
           value: "Y"
         volumeMounts:
           - mountPath: /var/opt/mssql
             name: sql
+          - mountPath: /var/secrets
+            name: secrets-store 
         resources:
           requests:
             memory: 2Gi
@@ -58,3 +60,9 @@ spec:
       volumes:
         - name: sql
           emptyDir: {}
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: keyvault-secretproviderclass

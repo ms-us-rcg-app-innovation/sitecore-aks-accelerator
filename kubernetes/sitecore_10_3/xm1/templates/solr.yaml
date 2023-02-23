@@ -51,8 +51,10 @@ spec:
           periodSeconds: 10
           failureThreshold: 10
         volumeMounts:
-            - mountPath: /tmp
-              name: tmp
+          - mountPath: /tmp
+            name: tmp
+          - mountPath: /secrets
+            name: secrets-store 
         resources:
           requests:
             memory: 2Gi
@@ -62,4 +64,10 @@ spec:
             cpu: 1500m
       volumes:
         - emptyDir: {}
-          name: tmp     
+          name: tmp
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: keyvault-secretproviderclass
