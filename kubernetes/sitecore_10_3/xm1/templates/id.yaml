@@ -36,42 +36,42 @@ spec:
         - name: Database_Server
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-server-name
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-core-database-username
         - name: Core_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-core-database-password
         - name: Sitecore_Sitecore__IdentityServer__Clients__PasswordClient__ClientSecrets__ClientSecret1
           valueFrom:
             secretKeyRef:
-              name: sitecore-identity
+              name: sitecore-secrets
               key: sitecore-identity-secret
         - name: Sitecore_Sitecore__IdentityServer__CertificateRawData
           valueFrom:
             secretKeyRef:
-              name: sitecore-identitycertificate
+              name: sitecore-secrets
               key: sitecore-identity-certificate
         - name: Sitecore_Sitecore__IdentityServer__CertificateRawDataPassword
           valueFrom:
             secretKeyRef:
-              name: sitecore-identitycertificate
+              name: sitecore-secrets
               key: sitecore-identity-certificate-password
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:
-              name: sitecore-license
+              name: sitecore-secrets
               key: sitecore-license
         - name: Sql_Database_Prefix
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-prefix
         - name: Sitecore_Sitecore__IdentityServer__SitecoreMemberShipOptions__ConnectionString
           value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);

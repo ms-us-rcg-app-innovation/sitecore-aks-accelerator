@@ -13,5 +13,5 @@ variable "name" {
 variable "secrets_file" {
   description = "Path to secrets yml file relative to path.module"
   type        = string
-  default     = "/../kubernetes/sitecore_10_3/xm1/values.secrets.yml"
+  default     = "/../kubernetes/sitecore_10_3/xm1/values.secrets.yaml"
 }

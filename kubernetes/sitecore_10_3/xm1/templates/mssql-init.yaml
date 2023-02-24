@@ -16,83 +16,83 @@ spec:
         - name: sitecore_admin_password
           valueFrom:
             secretKeyRef:
-              name: sitecore-admin
+              name: sitecore-secrets
               key: sitecore-admin-password
         - name: SQL_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-password
         - name: SQL_ADMIN_LOGIN
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-username
         - name: SQL_SERVER
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-server-name
         - name: SQL_ELASTIC_POOL_NAME
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-elastic-pool-name
         - name: Master_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-master-database-username
         - name: Master_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-master-database-password
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-core-database-username
         - name: Core_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-core-database-password
         - name: Web_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-web-database-username
         - name: Web_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-web-database-password
         - name: Forms_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-forms-database-username
         - name: Forms_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-forms-database-password
         - name: Sql_Database_Prefix
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-prefix
         - name: Sql_Custom_Database_Prefix_Update_From
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-custom-database-prefix-update-from
         volumeMounts:
         - mountPath: C:\Secrets
           name: secrets-store 
       restartPolicy: Never
-    volumes:
+      volumes:
       - name: secrets-store
         csi:
           driver: secrets-store.csi.k8s.io

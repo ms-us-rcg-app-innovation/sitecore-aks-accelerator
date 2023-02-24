@@ -6,9 +6,9 @@ windows:
   enabled: true
 
 keyVault:
- identity: ""
- name: ""
- tenantid: ""
+ identity: "4a7274d0-224a-44e6-b379-4ab4ef9a1308"
+ name: "sitecore8bito"
+ tenantid: "3db015b1-2bb5-43d8-a173-007683abc495"
 
 cd:
   domain: cd.globalhost

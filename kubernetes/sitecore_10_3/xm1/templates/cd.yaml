@@ -40,52 +40,52 @@ spec:
         - name: Database_Server
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-server-name
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-core-database-username
         - name: Core_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-core-database-password
         - name: Web_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-web-database-username
         - name: Web_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-web-database-password
         - name: Forms_Database_Username
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-forms-database-username
         - name: Forms_Database_Password
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-forms-database-password
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:
-              name: sitecore-license
+              name: sitecore-secrets
               key: sitecore-license
         - name: Sql_Database_Prefix
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-prefix
         - name: LOG_LEVEL_VALUE
           valueFrom:
             secretKeyRef:
-              name: sitecore-log-level
+              name: sitecore-secrets
               key: sitecore-log-level-value
         - name: Sitecore_ConnectionStrings_Security
           value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);
@@ -96,19 +96,19 @@ spec:
         - name: Sitecore_ConnectionStrings_Solr.Search
           valueFrom:
             secretKeyRef:
-              name: sitecore-solr
+              name: sitecore-secrets
               key: sitecore-solr-connection-string
         - name: Sitecore_ConnectionStrings_Redis.Sessions
           value: redis:6379,ssl=False,abortConnect=False
         - name: SOLR_CORE_PREFIX_NAME
           valueFrom:
             secretKeyRef:
-              name: sitecore-solr
+              name: sitecore-secrets
               key: sitecore-solr-core-prefix-name
         - name: MEDIA_REQUEST_PROTECTION_SHARED_SECRET
           valueFrom:
             secretKeyRef:
-              name: sitecore-protect-media-requests
+              name: sitecore-secrets
               key: sitecore-media-request-protection-shared-secret
         livenessProbe:
           httpGet:

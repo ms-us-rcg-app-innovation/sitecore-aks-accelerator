@@ -41,7 +41,7 @@ spec:
         - name: SA_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sitecore-database
+              name: sitecore-secrets
               key: sitecore-database-password
         - name: ACCEPT_EULA
           value: "Y"

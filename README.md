@@ -162,6 +162,14 @@ helm install csi csi-secrets-store-provider-azure/csi-secrets-store-provider-azu
 
 ```
 
+### Install via Helm
+
+```powershell
+
+helm install sitecore -f values.yaml -f values.secrets.yaml --dry-run --generate-name
+
+
+
 ## Addons
 
 ## Security

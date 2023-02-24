@@ -16,18 +16,18 @@ spec:
         - name: SITECORE_SOLR_CONNECTION_STRING
           valueFrom:
             secretKeyRef:
-              name: sitecore-solr
+              name: sitecore-secrets
               key: sitecore-solr-connection-string
         - name: SOLR_CORE_PREFIX_NAME
           valueFrom:
             secretKeyRef:
-              name: sitecore-solr
+              name: sitecore-secrets
               key: sitecore-solr-core-prefix-name
         volumeMounts:
         - mountPath: C:\Secrets
           name: secrets-store 
       restartPolicy: Never
-    volumes:
+      volumes:
       - name: secrets-store
         csi:
           driver: secrets-store.csi.k8s.io

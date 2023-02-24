@@ -63,11 +63,11 @@ spec:
             memory: 3Gi
             cpu: 1500m
       volumes:
-        - emptyDir: {}
-          name: tmp
-        - name: secrets-store
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: keyvault-secretproviderclass
+      - emptyDir: {}
+        name: tmp
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: keyvault-secretproviderclass
