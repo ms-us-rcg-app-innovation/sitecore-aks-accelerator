@@ -11,28 +11,28 @@ spec:
         - name: sitecore-docker-registry
       containers:
       - name: mssql-init
-        image: sitecore-xm1-mssql-init
+        image: '{{ .Values.mssqlInit.registry }}/{{ .Values.mssqlInit.image }}:{{ .Values.mssqlInit.tag }}'
         env:
         - name: sitecore_admin_password
           valueFrom:
             secretKeyRef:
               name: sitecore-admin
-              key: sitecore-adminpassword
+              key: sitecore-admin-password
         - name: SQL_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databasepassword
+              key: sitecore-database-password
         - name: SQL_ADMIN_LOGIN
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseusername
+              key: sitecore-database-username
         - name: SQL_SERVER
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseservername
+              key: sitecore-database-server-name
         - name: SQL_ELASTIC_POOL_NAME
           valueFrom:
             secretKeyRef:
@@ -82,7 +82,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseprefix
+              key: sitecore-database-prefix
         - name: Sql_Custom_Database_Prefix_Update_From
           valueFrom:
             secretKeyRef:

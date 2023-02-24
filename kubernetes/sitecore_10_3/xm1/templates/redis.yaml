@@ -32,7 +32,7 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: sitecore-redis
-        image: redis
+        image: '{{ .Values.redis.registry }}/{{ .Values.redis.image }}:{{ .Values.redis.tag }}'
         ports:
         - containerPort: 6379
         securityContext:

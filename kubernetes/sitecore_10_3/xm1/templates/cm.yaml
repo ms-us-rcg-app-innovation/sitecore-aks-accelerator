@@ -29,7 +29,7 @@ spec:
         kubernetes.io/os: windows
       containers:
       - name: sitecore-xm1-cm
-        image: sitecore-xm1-cm
+        image: '{{ .Values.cm.registry }}/{{ .Values.cm.image }}:{{ .Values.cm.tag }}'
         ports:
         - containerPort: 80
         env:
@@ -41,7 +41,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseservername
+              key: sitecore-database-server-name
         - name: Master_Database_Username
           valueFrom:
             secretKeyRef:
@@ -86,22 +86,22 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-identity
-              key: sitecore-identitysecret
+              key: sitecore-identity-secret
         - name: Sitecore_AppSettings_Telerik.AsyncUpload.ConfigurationEncryptionKey
           valueFrom:
             secretKeyRef:
               name: sitecore-telerik
-              key: sitecore-telerikencryptionkey
+              key: sitecore-telerik-encryption-key
         - name: Sitecore_AppSettings_Telerik.Upload.ConfigurationHashKey
           valueFrom:
             secretKeyRef:
               name: sitecore-telerik
-              key: sitecore-telerikencryptionkey
+              key: sitecore-telerik-encryption-key
         - name: Sitecore_AppSettings_Telerik.Web.UI.DialogParametersEncryptionKey
           valueFrom:
             secretKeyRef:
               name: sitecore-telerik
-              key: sitecore-telerikencryptionkey
+              key: sitecore-telerik-encryption-key
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:
@@ -111,7 +111,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseprefix
+              key: sitecore-database-prefix
         - name: LOG_LEVEL_VALUE
           valueFrom:
             secretKeyRef:
@@ -140,11 +140,11 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-graphql
-              key: sitecore-graphql-uploadmedia_encryptionkey
+              key: sitecore-graphql-upload-media-encryption-key
         - name: Sitecore_Identity_Server_Authority
-          value: https://{{ .Values.hostnames.id }}
+          value: https://{{ .Values.id.domain }}
         - name: Sitecore_Identity_Server_CallbackAuthority
-          value: https://{{ .Values.hostnames.cm }}
+          value: https://{{ .Values.cm.domain }}
         - name: Sitecore_Identity_Server_InternalAuthority
           value: http://id
         - name: Sitecore_Identity_Server_Require_Https

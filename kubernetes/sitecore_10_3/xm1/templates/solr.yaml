@@ -29,7 +29,7 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: solr
-        image: solr
+        image: '{{ .Values.solr.registry }}/{{ .Values.solr.image }}:{{ .Values.solr.tag }}'
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true

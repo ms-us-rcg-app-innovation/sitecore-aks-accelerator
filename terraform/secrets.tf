@@ -1,6 +1,6 @@
 locals {
-  secrets_yaml = file("${path.module}/secrets.yml")
-  secrets      = yamldecode(local.secrets_yaml)
+  secrets_yaml = file("${path.module}${var.secrets_file}")
+  secrets      = yamldecode(local.secrets_yaml).secrets
 }
 
 module "password" {

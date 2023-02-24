@@ -29,7 +29,7 @@ spec:
         kubernetes.io/os: windows
       containers:
       - name: sitecore-xm1-id
-        image: sitecore-xm1-id
+        image: '{{ .Values.id.registry }}/{{ .Values.id.image }}:{{ .Values.id.tag }}'
         ports:
         - containerPort: 80
         env:
@@ -37,7 +37,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseservername
+              key: sitecore-database-server-name
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
@@ -52,17 +52,17 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-identity
-              key: sitecore-identitysecret
+              key: sitecore-identity-secret
         - name: Sitecore_Sitecore__IdentityServer__CertificateRawData
           valueFrom:
             secretKeyRef:
               name: sitecore-identitycertificate
-              key: sitecore-identitycertificate
+              key: sitecore-identity-certificate
         - name: Sitecore_Sitecore__IdentityServer__CertificateRawDataPassword
           valueFrom:
             secretKeyRef:
               name: sitecore-identitycertificate
-              key: sitecore-identitycertificatepassword
+              key: sitecore-identity-certificate-password
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:
@@ -72,15 +72,15 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseprefix
+              key: sitecore-database-prefix
         - name: Sitecore_Sitecore__IdentityServer__SitecoreMemberShipOptions__ConnectionString
           value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);
         - name: Sitecore_Sitecore__IdentityServer__AccountOptions__PasswordRecoveryUrl
-          value: https://{{ .Values.hostnames.cm }}/sitecore/login?rc=1
+          value: https://{{ .Values.cm.domain }}/sitecore/login?rc=1
         - name: Sitecore_Sitecore__IdentityServer__Clients__DefaultClient__AllowedCorsOrigins__AllowedCorsOriginsGroup1
-          value: https://{{ .Values.hostnames.cm }}
+          value: https://{{ .Values.cm.domain }}
         - name: Sitecore_Sitecore__IdentityServer__PublicOrigin
-          value: https://{{ .Values.hostnames.id }}
+          value: https://{{ .Values.id.domain }}
         livenessProbe:
           httpGet:
             path: /healthz/live

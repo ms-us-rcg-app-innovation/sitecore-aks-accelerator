@@ -29,7 +29,7 @@ spec:
         kubernetes.io/os: windows
       containers:
       - name: sitecore-xm1-cd
-        image: sitecore-xm1-cd
+        image: '{{ .Values.cd.registry }}/{{ .Values.cd.image }}:{{ .Values.cd.tag }}'
         ports:
         - containerPort: 80
         env:
@@ -41,7 +41,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseservername
+              key: sitecore-database-server-name
         - name: Core_Database_Username
           valueFrom:
             secretKeyRef:
@@ -81,7 +81,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databaseprefix
+              key: sitecore-database-prefix
         - name: LOG_LEVEL_VALUE
           valueFrom:
             secretKeyRef:

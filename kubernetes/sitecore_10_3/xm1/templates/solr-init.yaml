@@ -11,7 +11,7 @@ spec:
         - name: sitecore-docker-registry
       containers:
       - name: solr-init
-        image: sitecore-xm1-solr-init
+        image: '{{ .Values.solrInit.registry }}/{{ .Values.solrInit.image }}:{{ .Values.solrInit.tag }}'
         env:
         - name: SITECORE_SOLR_CONNECTION_STRING
           valueFrom:

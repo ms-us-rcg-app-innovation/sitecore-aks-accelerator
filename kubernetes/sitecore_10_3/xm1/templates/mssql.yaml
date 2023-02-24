@@ -29,7 +29,7 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: mssql
-        image: mssql
+        image: '{{ .Values.mssql.registry }}/{{ .Values.mssql.image }}:{{ .Values.mssql.tag }}'
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
@@ -42,7 +42,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-database
-              key: sitecore-databasepassword
+              key: sitecore-database-password
         - name: ACCEPT_EULA
           value: "Y"
         volumeMounts:

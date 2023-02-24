@@ -1,6 +1,3 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
 # Ref - https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret.html
 syncSecret:
   enabled: true
@@ -8,94 +5,80 @@ syncSecret:
 windows:
   enabled: true
 
-hostnames:
-  cd: "cd.globalhost"
-  cm: "cm.globalhost"
-  id: "id.globalhost"
-
 keyVault:
  identity: ""
  name: ""
- tenantId: ""
+ tenantid: ""
 
-bases:
-- configmaps
+cd:
+  domain: cd.globalhost
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-cd
+  tag: 10.3-ltsc2019
+cm:
+  domain: cm.globalhost
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-cm
+  tag: 10.3-ltsc2019
+id:
+  domain: id.globalhost
+  registry: scr.sitecore.com
+  image: sxp/sitecore-id7
+  tag: 10.3-ltsc2019
+mssql:
+  registry: mcr.microsoft.com
+  image: mssql/server
+  tag: 2017-CU21-ubuntu-16.04
+mssqlInit:
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-mssql-init
+  tag: 10.3-ltsc2019
+redis:
+  registry: docker.io
+  image: redis
+  tag: 4.0.14-alpine
+solr:
+  registry: docker.io
+  image: solr
+  tag: 8.11.2
+solrInit:
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-solr-init
+  tag: 10.3-ltsc2019
 
-images:
-- name: sitecore-xm1-cd
-  newName: scr.sitecore.com/sxp/sitecore-xm1-cd
-  newTag: 10.3-ltsc2019
-- name: sitecore-xm1-cm
-  newName: scr.sitecore.com/sxp/sitecore-xm1-cm
-  newTag: 10.3-ltsc2019
-- name: sitecore-xm1-id
-  newName: scr.sitecore.com/sxp/sitecore-id7
-  newTag: 10.3-ltsc2019
+# generatorOptions:
+#   disableNameSuffixHash: true
 
-- name: mssql
-  newName: mcr.microsoft.com/mssql/server
-  newTag: 2017-CU21-ubuntu-16.04
-- name: redis
-  newName: redis
-  newTag: 4.0.14-alpine
-- name: solr
-  newName: solr
-  newTag: 8.11.2
+# configMapGenerator:
+# - name: sitecore-hostnames
+#   files:
+#   - cd-hostname
+#   - cm-hostname
+#   - id-hostname
 
-- name: sitecore-xm1-mssql-init
-  newName: scr.sitecore.com/sxp/sitecore-xm1-mssql-init
-  newTag: 10.3-ltsc2019
-- name: sitecore-xm1-solr-init
-  newName: scr.sitecore.com/sxp/sitecore-xm1-solr-init
-  newTag: 10.3-ltsc2019
+# vars:
+# - name: cm-hostname
+#   objref:
+#     kind: ConfigMap
+#     name: sitecore-hostnames
+#     apiVersion: v1
+#   fieldref:
+#     fieldpath: data.cm-hostname
+# - name: id-hostname
+#   objref:
+#     kind: ConfigMap
+#     name: sitecore-hostnames
+#     apiVersion: v1
+#   fieldref:
+#     fieldpath: data.id-hostname
 
-- name: sitecore-xm1-solr-init-searchstax
-  newName: scr.sitecore.com/sxp/sitecore-xm1-solr-init-searchstax
-  newTag: 10.3-ltsc2019
-
-
-resources:
-  - cm.yaml
-  - cd.yaml
-  - id.yaml
-
-  - mssql.yaml
-  - redis.yaml
-  - solr.yaml
-
-generatorOptions:
-  disableNameSuffixHash: true
-
-configMapGenerator:
-- name: sitecore-hostnames
-  files:
-  - cd-hostname
-  - cm-hostname
-  - id-hostname
-
-vars:
-- name: cm-hostname
-  objref:
-    kind: ConfigMap
-    name: sitecore-hostnames
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.cm-hostname
-- name: id-hostname
-  objref:
-    kind: ConfigMap
-    name: sitecore-hostnames
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.id-hostname
-
-secretGenerator:
-- name: sitecore-admin
-  files:
-  - sitecore-adminpassword.txt
-- name: global-id-tls
-  files:
-    - tls/global-id/tls.key
-    - tls/global-id/tls.crt
-  type: kubernetes.io/tls
+# secretGenerator:
+# - name: sitecore-admin
+#   files:
+#   - sitecore-adminpassword.txt
+# - name: global-id-tls
+#   files:
+#     - tls/global-id/tls.key
+#     - tls/global-id/tls.crt
+#   type: kubernetes.io/tls
 
