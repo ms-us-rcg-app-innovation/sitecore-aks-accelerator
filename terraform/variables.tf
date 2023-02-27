@@ -9,3 +9,9 @@ variable "name" {
   description = "Common name used in all resources"
   type        = string
 }
+
+variable "user_ids" {
+  description = "the list of user ids of users that need read access policies created for things like key vault"
+  type        = list(string)
+  default     = []
+}
