@@ -76,10 +76,10 @@ Run terraform init and specify the backend configuration. For configuration deta
 NAME=sitecore
 location="South Central US"
 ARM_RESOURCE_GROUP="${NAME}-tfstate"
-storage_account_name=      # you need to supply a value here
+storage_account_name=      # tfstate resource group storage account
 container_name="tfstate"
 key="terraform.tfstate"
-ARM_ACCESS_KEY=            # you need to supply a value here
+ARM_ACCESS_KEY=            # tfstate resource group storage account access key
 
 terraform init \
 -backend-config "container_name=${container_name}" \
@@ -97,10 +97,10 @@ terraform apply -var="name=${NAME}" -var="location=${location}" -auto-approve
 $location="South Central US"
 $name="sitecore"
 $env:ARM_RESOURCE_GROUP="${name}-tfstate"
-$env:ARM_STORAGE_ACCOUNT_NAME=""
+$env:ARM_STORAGE_ACCOUNT_NAME=""    # tfstate resource group storage account
 $env:ARM_CONTAINER_NAME="tfstate"
 $env:ARM_KEY="terraform.tfstate"
-$env:ARM_ACCESS_KEY=""
+$env:ARM_ACCESS_KEY=""      # tfstate resource group storage account access key
 
 terraform init `
 -backend-config "container_name=$env:ARM_CONTAINER_NAME" `

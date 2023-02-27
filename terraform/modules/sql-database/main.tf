@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     mssql = {
-      source = "betr-io/mssql" #"betr.io/betr/mssql"
+      source  = "betr-io/mssql" #"betr.io/betr/mssql"
       version = ">= 0.2.7"
     }
   }
@@ -27,8 +27,8 @@ resource "mssql_login" "database" {
     }
   }
 
-  login_name  = var.user_name
-  password    = var.password
+  login_name = var.user_name
+  password   = var.password
 }
 
 resource "mssql_user" "database" {
@@ -40,8 +40,8 @@ resource "mssql_user" "database" {
     }
   }
 
-  database    = var.name
-  username    = var.user_name
-  login_name  = var.user_name
-  roles       = ["db_owner"]
+  database   = var.name
+  username   = var.user_name
+  login_name = var.user_name
+  roles      = ["db_owner"]
 }

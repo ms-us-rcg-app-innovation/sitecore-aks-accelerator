@@ -58,7 +58,7 @@ data "azuread_group" "key_valult_users" {
 
 locals {
   userids = concat(data.azuread_group.key_valult_users.members,
-    data.azuread_group.key_valult_users.owners)
+  data.azuread_group.key_valult_users.owners)
 }
 
 
