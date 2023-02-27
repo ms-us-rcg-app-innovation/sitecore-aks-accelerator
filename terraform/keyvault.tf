@@ -17,47 +17,11 @@ resource "azurerm_key_vault" "default" {
   purge_protection_enabled    = false
 
   sku_name = "standard"
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Create",
-      "Get",
-    ]
-
-    secret_permissions = [
-      "Set",
-      "Get",
-      "Delete",
-      "Purge",
-      "Recover",
-      "List"
-    ]
-
-    certificate_permissions = [
-      "Create",
-      "Get",
-      "Import",
-      "Delete",
-      "Update",
-      "List"
-    ]
-
-    storage_permissions = [
-      "Get",
-    ]
-  }
 }
 
-data "azuread_group" "key_valult_users" {
-  display_name     = "sitecore-aks-accelerator-keyvault-reader"
-  security_enabled = true
-}
 
 locals {
-  userids = concat(data.azuread_group.key_valult_users.members, data.azuread_group.key_valult_users.owners)
+  userids = concat(var.user_ids, azurerm_client_config.current.object_id)
 }
 
 # key vault doesn't support using aad groups in policy enforcement
