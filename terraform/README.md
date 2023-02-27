@@ -39,3 +39,20 @@ terraform plan -var="name=sitecore" -var="location=South Central US"
 ```
 terraform apply -var="name=sitecore" -var="location=South Central US" -auto-approve
 ```
+
+## user ids for access policies
+
+Because different users can run CI and local, the user can create a `terraform.tfvars` file locally to hold the list of user ids for the access policy. The syntax is as follows:
+
+```tfvars
+user_ids = [ 
+    "00000000-0000-0000-0000-000000000000",
+    "11111111-1111-1111-1111-111111111111"
+]
+```
+
+The user can also specify an environment variable such as the following:
+
+```bash
+export TF_VAR_user_ids='["00000000-0000-0000-0000-000000000000","11111111-1111-1111-1111-111111111111"]'
+```

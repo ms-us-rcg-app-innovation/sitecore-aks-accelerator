@@ -21,7 +21,7 @@ resource "azurerm_key_vault" "default" {
 
 
 locals {
-  userids = concat(var.user_ids, data.azurerm_client_config.current.object_id)
+  userids = distinct(sort(concat(var.user_ids, [data.azurerm_client_config.current.object_id])))
 }
 
 # key vault doesn't support using aad groups in policy enforcement
