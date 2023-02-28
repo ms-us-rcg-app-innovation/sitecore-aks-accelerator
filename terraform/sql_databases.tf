@@ -32,6 +32,10 @@ resource "azurerm_mssql_server" "default" {
 }
 
 module "dbserver" {
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_user
+  ]
+
   source = "./modules/key-vault-value"
 
   key_vault_id = azurerm_key_vault.default.id
@@ -66,6 +70,10 @@ resource "azurerm_mssql_firewall_rule" "localclient" {
 # }
 
 module "dbelasticpool" {
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_user
+  ]
+  
   source = "./modules/key-vault-value"
 
   key_vault_id = azurerm_key_vault.default.id

@@ -150,24 +150,24 @@ helm install ingress-nginx stable/ingress-nginx `
  --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux
 ```
 
-### Deploy the Secrets Provider
+### Load Values for Helm
+
+Acquire the system generated identity from the AKS cluster. Take the result of the command below and update the Helm values file kubernetes/sitecore_10_3/xm1/values.yaml. Set the identity GUID to the keyVault.identity value and set the Key Vault name to keyVault.name.
 
 ```powershell
-# add secrets store csi driver
-helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
-helm install secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system --set windows.enabled=true --generate-name
 
-# add azure key vault provider for windows nodes
-kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer-windows.yaml --namespace=kube-system
-
+az aks show -g ${name} -n ${name} --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId -o tsv
 ```
 
 ### Install Sitecore via Helm
 
+Apply the manifest files for the Sitecore application.
+
 ```powershell
 
 cd kubernetes/sitecore_10_3/xm1
-helm install . -f values.yaml -f values.secrets.yaml --generate-name 
+helm install -f values.yaml -f values.secrets.yaml sitecore .
+```
 
 
 ## Addons

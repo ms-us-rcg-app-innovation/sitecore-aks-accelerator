@@ -19,11 +19,35 @@ resource "azurerm_key_vault" "default" {
   sku_name = "standard"
 }
 
+# additional access for current terraform user to allow for importing and purging on destroy
+resource "azurerm_key_vault_access_policy" "terraform_user" {
+  key_vault_id = azurerm_key_vault.default.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
 
-locals {
-  userids = distinct(sort(concat(var.user_ids, [data.azurerm_client_config.current.object_id])))
+  secret_permissions = [
+    "Get",
+    "List",
+    "Set",
+    "Delete",
+    "Recover",
+    "Purge"
+  ]
+
+  certificate_permissions = [
+    "Create",
+    "Get",
+    "Update",
+    "List",
+    "Delete",
+    "Purge",
+    "Import"
+  ]
 }
 
+locals {
+  userids = distinct(sort(var.user_ids))
+}
 
 # key vault doesn't support using aad groups in policy enforcement
 # they must be added individually
@@ -49,6 +73,8 @@ resource "azurerm_key_vault_access_policy" "key_vault_user" {
     "Delete"
   ]
 }
+
+
 
 resource "random_password" "windows" {
   length = 16

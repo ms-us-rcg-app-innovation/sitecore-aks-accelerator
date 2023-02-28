@@ -4,6 +4,10 @@ locals {
 }
 
 module "value" {
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_user
+  ]
+
   source = "./modules/key-vault-value"
 
   key_vault_id = azurerm_key_vault.default.id
@@ -18,6 +22,10 @@ module "value" {
 }
 
 module "file" {
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_user
+  ]
+
   source = "./modules/key-vault-value"
 
   key_vault_id = azurerm_key_vault.default.id
@@ -32,6 +40,10 @@ module "file" {
 }
 
 module "password" {
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_user
+  ]
+
   source = "./modules/key-vault-password"
 
   key_vault_id = azurerm_key_vault.default.id
@@ -45,6 +57,10 @@ module "password" {
 }
 
 module "certificate_authority" {
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_user
+  ]
+
   source = "./modules/key-vault-certificate-authority"
 
   key_vault_id = azurerm_key_vault.default.id
@@ -69,7 +85,8 @@ module "certificate" {
   key_vault_id = azurerm_key_vault.default.id
 
   depends_on = [
-    module.certificate_authority
+    module.certificate_authority,
+    azurerm_key_vault_access_policy.terraform_user
   ]
 
   for_each = {

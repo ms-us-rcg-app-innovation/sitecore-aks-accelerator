@@ -6,9 +6,10 @@ windows:
   enabled: true
 
 keyVault:
- identity: "4a7274d0-224a-44e6-b379-4ab4ef9a1308"
- name: "sitecore8bito"
+ identity: "d3a3a8ae-5e9f-4a5b-afe8-e2c8c4a6f3f8"
+ name: "sitecore4i9e4"
  tenantid: "3db015b1-2bb5-43d8-a173-007683abc495"
+ useVMManagedIdentity: "true"
 
 cd:
   domain: cd.globalhost
