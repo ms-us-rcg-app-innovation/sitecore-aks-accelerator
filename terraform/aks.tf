@@ -31,8 +31,8 @@ resource "azurerm_kubernetes_cluster" "default" {
 resource "azurerm_kubernetes_cluster_node_pool" "windows" {
   name                  = "win19"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.default.id
-  vm_size               = "Standard_D2_v2"
-  node_count            = 1
+  vm_size               = "Standard_D4_v2"
+  node_count            = 3
   os_type               = "Windows"
   os_sku                = "Windows2019"
 

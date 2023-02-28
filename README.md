@@ -150,24 +150,24 @@ helm install ingress-nginx stable/ingress-nginx `
  --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux
 ```
 
-### Deploy the Secrets
+### Deploy the Secrets Provider
 
 ```powershell
 # add secrets store csi driver
-# helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
-# helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system --set windows.enabled=true
+helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+helm install secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system --set windows.enabled=true --generate-name
 
-helm repo add csi-secrets-store-provider-azure https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
-helm install csi csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --namespace kube-system --set windows.enabled=true
+# add azure key vault provider for windows nodes
+kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer-windows.yaml --namespace=kube-system
 
 ```
 
-### Install via Helm
+### Install Sitecore via Helm
 
 ```powershell
 
-helm install sitecore -f values.yaml -f values.secrets.yaml --dry-run --generate-name
-
+cd kubernetes/sitecore_10_3/xm1
+helm install . -f values.yaml -f values.secrets.yaml --generate-name 
 
 
 ## Addons

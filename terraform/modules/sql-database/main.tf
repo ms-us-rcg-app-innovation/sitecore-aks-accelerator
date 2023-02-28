@@ -31,7 +31,17 @@ resource "mssql_login" "database" {
   password   = var.password
 }
 
+# attempt to address race condition on creating login and then user 
+# resulting in failed login for admin user when attempting to create user
+resource "time_sleep" "wait_5_seconds" {
+  depends_on = [mssql_login.database]
+
+  create_duration = "5s"
+}
+
 resource "mssql_user" "database" {
+  depends_on = [time_sleep.wait_5_seconds]
+
   server {
     host = var.server_fqdn
     login {
