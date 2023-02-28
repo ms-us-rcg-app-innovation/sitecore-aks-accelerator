@@ -27,7 +27,8 @@ env:
   TFSTATE_STORAGE_CONTAINER_NAME: ${{vars.TFSTATE_STORAGE_CONTAINER_NAME}} 
   TFSTATE_KEY: ${{vars.TFSTATE_KEY}}
   TFSTATE_RESOURCES_GROUP_NAME: ${{vars.TFSTATE_RESOURCES_GROUP_NAME}}
-  
+  TF_VAR_user_ids: ${{vars.TF_VAR_user_ids}}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
