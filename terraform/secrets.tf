@@ -10,6 +10,9 @@ module "password" {
 
   name = each.key
 
+  depends_on = [
+    azurerm_key_vault_access_policy.key_vault_user
+  ]
 
   for_each = {
     for secret in local.secrets :
@@ -27,6 +30,10 @@ module "certificate_authority" {
   name         = each.key
   common_name  = each.value.options.common_name
   organization = each.value.options.organization
+
+  depends_on = [
+    azurerm_key_vault_access_policy.key_vault_user
+  ]
 
   for_each = {
     for secret in local.secrets :
@@ -46,7 +53,8 @@ module "certificate" {
   key_vault_id = azurerm_key_vault.default.id
 
   depends_on = [
-    module.certificate_authority
+    module.certificate_authority,
+    azurerm_key_vault_access_policy.key_vault_user
   ]
 
   for_each = {
@@ -63,6 +71,10 @@ module "value" {
 
   name  = each.key
   value = try(each.value.options.default, "")
+
+  depends_on = [
+    azurerm_key_vault_access_policy.key_vault_user
+  ]
 
   for_each = {
     for secret in local.secrets :
