@@ -213,6 +213,10 @@ cm.globalhost
 id.globalhost
 ```
 
+## Cleanup
+
+As part of this process, the client machine's IP address is allowed access to the Azure SQL Server. For privacy and security reasons, it is recommended to remove that firewall rule using the Azure Portal.
+
 ## Addons
 
 ## Security
