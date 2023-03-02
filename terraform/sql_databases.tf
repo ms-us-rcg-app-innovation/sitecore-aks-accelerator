@@ -18,7 +18,7 @@ locals {
     "Core",
     "Master",
     "Web",
-    "Forms"
+    "ExperienceForms"
   ]
 }
 
@@ -50,24 +50,18 @@ resource "azurerm_mssql_firewall_rule" "localclient" {
   end_ip_address   = local.wan_ip
 }
 
-# resource "azurerm_mssql_elasticpool" "default" {
-#   name                = "${local.server_prefix}-elasticpool"
-#   resource_group_name = azurerm_resource_group.default.name
-#   location            = azurerm_resource_group.default.location
-#   server_name         = azurerm_mssql_server.default.name
-#   max_size_gb         = 50
+# ref - https://github.com/hashicorp/terraform-provider-azurerm/issues/14849
+data "azurerm_public_ip" "cluster_outbound" {
+  name                = split("/",tolist(azurerm_kubernetes_cluster.default.network_profile[0].load_balancer_profile[0].effective_outbound_ips)[0])[8]
+  resource_group_name = split("/",tolist(azurerm_kubernetes_cluster.default.network_profile[0].load_balancer_profile[0].effective_outbound_ips)[0])[4]
+}
 
-#   sku {
-#     name     = "StandardPool"
-#     tier     = "Standard"
-#     capacity = 100
-#   }
-
-#   per_database_settings {
-#     min_capacity = 10
-#     max_capacity = 20
-#   }
-# }
+resource "azurerm_mssql_firewall_rule" "cluster_access" {
+  name             = "ClusterAccessAllowRule"
+  server_id        = azurerm_mssql_server.default.id
+  start_ip_address = data.azurerm_public_ip.cluster_outbound.ip_address
+  end_ip_address   = data.azurerm_public_ip.cluster_outbound.ip_address
+}
 
 module "dbelasticpool" {
   depends_on = [
@@ -78,18 +72,24 @@ module "dbelasticpool" {
 
   key_vault_id = azurerm_key_vault.default.id
   name         = "sitecore-database-elastic-pool-name"
-  value        = ""
+  value        = "" # supply if using elastic pool
 }
 
-module "database" {
-  source = "./modules/sql-database"
+resource "mssql_login" "database" {
+  depends_on = [
+    azurerm_mssql_firewall_rule.localclient
+  ]
 
   for_each        = toset(local.databases)
-  name            = "${local.prefix}.${each.key}"
-  server_id       = azurerm_mssql_server.default.id
-  server_fqdn     = azurerm_mssql_server.default.fully_qualified_domain_name
-  user_name       = module.value["sitecore-${lower(each.key)}-database-username"].result
-  password        = module.password["sitecore-${lower(each.key)}-database-password"].result
-  admin_user_name = local.admin_user_name
-  admin_password  = local.admin_password
+
+  server {
+    host = azurerm_mssql_server.default.fully_qualified_domain_name
+    login {
+      username = local.admin_user_name
+      password = local.admin_password
+    }
+  }
+
+  login_name = module.value["sitecore-${lower(each.key)}-database-username"].result
+  password   = module.password["sitecore-${lower(each.key)}-database-password"].result
 }

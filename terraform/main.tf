@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.40.0"
     }
+    mssql = {
+      source  = "betr-io/mssql" #"betr.io/betr/mssql"
+      version = ">= 0.2.7"
+    }
   }
 
   backend "azurerm" {

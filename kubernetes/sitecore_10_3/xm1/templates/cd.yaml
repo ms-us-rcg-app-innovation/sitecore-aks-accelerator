@@ -66,12 +66,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sitecore-secrets
-              key: sitecore-forms-database-username
+              key: sitecore-experienceforms-database-username
         - name: Forms_Database_Password
           valueFrom:
             secretKeyRef:
               name: sitecore-secrets
-              key: sitecore-forms-database-password
+              key: sitecore-experienceforms-database-password
         - name: Sitecore_License
           valueFrom:
             secretKeyRef:

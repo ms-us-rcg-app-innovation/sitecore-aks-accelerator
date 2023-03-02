@@ -72,7 +72,7 @@ resource "azurerm_key_vault_access_policy" "aks_identity" {
 
   key_vault_id    = azurerm_key_vault.default.id
   tenant_id       = data.azurerm_client_config.current.tenant_id
-  application_id  = azurerm_kubernetes_cluster.default.key_vault_secrets_provider[0].secret_identity[0].client_id 
+  object_id       = azurerm_kubernetes_cluster.default.key_vault_secrets_provider[0].secret_identity[0].object_id 
 
   secret_permissions = [
     "Get",

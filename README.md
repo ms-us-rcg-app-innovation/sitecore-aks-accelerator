@@ -32,6 +32,7 @@ git submodule update --init --recursive
 * Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/#install-nonstandard-package-tools)
 * Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 * Install [terraform](https://developer.hashicorp.com/terraform/downloads?ajs_aid=e7cb18f6-0e91-46ef-b3af-d22a83181326&product_intent=terraform)
+* Install [sqlcmd](https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility?view=sql-server-ver16)
 
 ```
 choco install helm kubectl azure-cli terraform -y
@@ -152,23 +153,65 @@ helm install ingress-nginx stable/ingress-nginx `
 
 ### Load Values for Helm
 
-Acquire the system generated identity from the AKS cluster. Take the result of the command below and update the Helm values file kubernetes/sitecore_10_3/xm1/values.yaml. Set the identity GUID to the keyVault.identity value and set the Key Vault name to keyVault.name.
+Acquire the system generated identity from the AKS cluster. Take the result of the command below and update the Helm values file kubernetes/sitecore_10_3/xm1/values.yaml. 
 
 ```powershell
-
 az aks show -g ${name} -n ${name} --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId -o tsv
 ```
 
+Also query to get the Key Vault name for the values file.
+
+```powershell
+az keyvault list -g ${name} --query [].name
+```
+
+Set the identity GUID to the keyVault.identity value and set the Key Vault name to keyVault.name.
+
 ### Install Sitecore via Helm
+
+Navigate to the Sitecore 10.3 XM1 Kubernetes manifest directory
+
+```powershell
+cd kubernetes/sitecore_10_3/xm1
+```
+
+To prepare the application, execute SQL init Job to create and seed databases.
+
+```powershell
+helm template -f values.yaml -f values.secrets.yaml -s templates/secrets-class.yaml . | kubectl apply -f -
+helm template -f values.yaml -f values.secrets.yaml -s templates/mssql-init.yaml . | kubectl apply -f -
+```
+
+Wait for the Job to complete before continuing.
+
+Execute SQL script to confirm and establish the SQL logins and users. Use the Azure Portal to get the SQL Server info and user/password from the Key Vault.
+
+```powershell
+cd src/scripts
+Set-ExecutionPolicy Unrestricted
+.\EstablishSQLUsers.ps1 -Server <sql server fqdn> -User <admin user> -Password <admin password>
+```
+
+Remove the prep workloads.
+
+```powershell
+kubectl delete job mssql-init
+kubectl delete secretproviderclass keyvault-secretproviderclass
+```
 
 Apply the manifest files for the Sitecore application.
 
 ```powershell
-
-cd kubernetes/sitecore_10_3/xm1
 helm install -f values.yaml -f values.secrets.yaml sitecore .
 ```
 
+Note the cluster's public IP address and add the following records to your local hosts file.
+
+```bash
+cd.globalhost
+cm.globalhost
+id.globalhost
+```
 
 ## Addons
 
