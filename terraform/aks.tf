@@ -3,6 +3,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
   dns_prefix          = "sitecore"
+  kubernetes_version  = "1.25.5"
 
   default_node_pool {
     name       = "default"

@@ -121,36 +121,6 @@ az account set --subscription "" # put your subscription here
 az aks get-credentials --resource-group ${name} --name ${name} # replace with your resource group name and cluster name
 ```
 
-### Deploy Ingress Helm Chart
-
-```bash
-# add the nginx helm repo
-helm repo add stable https://kubernetes.github.io/ingress-nginx
-helm repo update
-```
-
-> bash
-
-```bash
-# install the nginx chart
-helm install ingress-nginx stable/ingress-nginx \
- --set controller.replicaCount=2 \
- --set controller.nodeSelector."kubernetes\.io/os"=linux \
- --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
- --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux
-```
-
-> powershell
-
-```powershell
-# install the nginx chart
-helm install ingress-nginx stable/ingress-nginx `
- --set controller.replicaCount=2 `
- --set controller.nodeSelector."kubernetes\.io/os"=linux `
- --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux `
- --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux
-```
-
 ### Load Values for Helm
 
 Acquire the system generated identity from the AKS cluster. Take the result of the command below and update the Helm values file kubernetes/sitecore_10_3/xm1/values.yaml. 

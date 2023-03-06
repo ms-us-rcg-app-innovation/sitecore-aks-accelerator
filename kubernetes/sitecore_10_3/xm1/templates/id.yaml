@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: id
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
 spec:
   selector:
     app: id

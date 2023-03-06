@@ -43,13 +43,23 @@ spec:
             name: id
             port: 
               number: 80
+  - host: myhelloworld.globalhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hello
+            port: 
+              number: 80
   tls:
-  - secretName: global-cd-tls
+  - secretName: sitecore-cd-certificate
     hosts:
     - {{ .Values.cd.domain }}
-  - secretName: global-cm-tls
+  - secretName: sitecore-cm-certificate
     hosts:
     - {{ .Values.cm.domain }}
-  - secretName: global-id-tls
+  - secretName: sitecore-identity-certificate
     hosts:
     - {{ .Values.id.domain }}
