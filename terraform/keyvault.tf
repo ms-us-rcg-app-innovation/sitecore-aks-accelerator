@@ -70,7 +70,8 @@ resource "azurerm_key_vault_access_policy" "key_vault_user" {
     "Get",
     "Update",
     "List",
-    "Delete"
+    "Delete",
+    "Import"
   ]
 }
 

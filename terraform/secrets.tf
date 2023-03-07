@@ -5,8 +5,9 @@ locals {
 
 module "value" {
   depends_on = [
-    azurerm_key_vault_access_policy.terraform_user
-  ]
+    azurerm_key_vault_access_policy.terraform_user,
+    azurerm_key_vault_access_policy.key_vault_user
+  ]   
 
   source = "./modules/key-vault-value"
 
@@ -23,7 +24,8 @@ module "value" {
 
 module "file" {
   depends_on = [
-    azurerm_key_vault_access_policy.terraform_user
+    azurerm_key_vault_access_policy.terraform_user,
+    azurerm_key_vault_access_policy.key_vault_user
   ]
 
   source = "./modules/key-vault-value"
@@ -41,14 +43,15 @@ module "file" {
 
 module "password" {
   depends_on = [
-    azurerm_key_vault_access_policy.terraform_user
+    azurerm_key_vault_access_policy.terraform_user,
+    azurerm_key_vault_access_policy.key_vault_user
   ]
 
   source = "./modules/key-vault-password"
 
   key_vault_id = azurerm_key_vault.default.id
   name         = each.key
-
+  
   for_each = {
     for secret in local.secrets_yaml_decoded.secrets :
     secret.name => secret
@@ -58,7 +61,8 @@ module "password" {
 
 module "certificate_authority" {
   depends_on = [
-    azurerm_key_vault_access_policy.terraform_user
+    azurerm_key_vault_access_policy.terraform_user,
+    azurerm_key_vault_access_policy.key_vault_user
   ]
 
   source = "./modules/key-vault-certificate-authority"
@@ -86,7 +90,8 @@ module "certificate" {
 
   depends_on = [
     module.certificate_authority,
-    azurerm_key_vault_access_policy.terraform_user
+    azurerm_key_vault_access_policy.terraform_user,
+    azurerm_key_vault_access_policy.key_vault_user
   ]
 
   for_each = {

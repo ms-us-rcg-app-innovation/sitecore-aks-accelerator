@@ -14,7 +14,7 @@ env:
   TFSTATE_STORAGE_ACCOUNT_NAME: ${{ vars.TFSTATE_STORAGE_ACCOUNT_NAME }}
   TFSTATE_STORAGE_CONTAINER_NAME: ${{vars.TFSTATE_STORAGE_CONTAINER_NAME}} 
   TFSTATE_KEY: ${{vars.TFSTATE_KEY}}
-  TFSTATE_RESOURCES_GROUP_NAME: ${{vars.TFSTATE_RESOURCES_GROUP_NAME}}
+  TFSTATE_RESOURCE_GROUP_NAME: ${{vars.TFSTATE_RESOURCE_GROUP_NAME}}
   TF_VAR_user_ids: ${{vars.TF_VAR_user_ids}}
   
 # Controls when the workflow will run
@@ -51,7 +51,7 @@ jobs:
    
       - name: Terraform Init
         id: init 
-        run: terraform init -backend-config=storage_account_name=${TFSTATE_STORAGE_ACCOUNT_NAME} -backend-config=container_name=${TFSTATE_STORAGE_CONTAINER_NAME} -backend-config=key=${TFSTATE_KEY} -backend-config=resource_group_name=${TFSTATE_RESOURCES_GROUP_NAME}
+        run: terraform init -backend-config=storage_account_name=${TFSTATE_STORAGE_ACCOUNT_NAME} -backend-config=container_name=${TFSTATE_STORAGE_CONTAINER_NAME} -backend-config=key=${TFSTATE_KEY} -backend-config=resource_group_name=${TFSTATE_RESOURCE_GROUP_NAME}
 
       - name: Terraform Validate
         id: validate
