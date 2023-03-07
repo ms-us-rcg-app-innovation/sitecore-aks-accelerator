@@ -6,8 +6,8 @@ windows:
   enabled: true
 
 keyVault:
- identity: "c1ac8af5-774d-452b-b492-01e443880faa"
- name: "sitecorer6ewp"
+ identity: "8cf289f6-c5c8-4a86-b9d2-dd228c7d8339"
+ name: "sitecorelosg0"
  tenantid: "3db015b1-2bb5-43d8-a173-007683abc495"
  useVMManagedIdentity: "true"
 

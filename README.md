@@ -7,7 +7,8 @@ This project contains resources, documentation, infrastructure as code, and guid
 | folder    | description |
 | --------- | ----------- |
 | bootstrap | bootstrap the terraform by creating a storage account for tfstate |
-| src       | the source code including any yaml for kubernetes |
+| kubernetes| yaml for kubernetes / helm |
+| src       | source code and scripts |
 | terraform | the terraform for creating infrastructure |
 
 
@@ -16,15 +17,6 @@ This project contains resources, documentation, infrastructure as code, and guid
 ### Review Sitecore Documentation
 
 Download the "Installation Guide for Production Environment with Kubernetes" document from [dev.sitecore.net](https://dev.sitecore.net/Downloads/Sitecore_Experience_Platform/103/Sitecore_Experience_Platform_103.aspx)
-
-### Establish Submodule
-
-Download submodules in order to get the files referenced in the submodules. This is to load [Sitecore's container deployment project](https://github.com/Sitecore/container-deployment) into this repository for reference. 
-
-```
-# run this after you run git clone
-git submodule update --init --recursive
-```
 
 ### Install CLIs
 
@@ -133,9 +125,40 @@ Also query to get the Key Vault name for the values file.
 
 ```powershell
 az keyvault list -g ${name} --query [].name
+az keyvault list -g ${name} --query [].properties.tenantId
 ```
 
 Set the identity GUID to the keyVault.identity value and set the Key Vault name to keyVault.name.
+
+### Deploy Ingress Helm Chart
+
+```bash
+# add the nginx helm repo
+helm repo add stable https://kubernetes.github.io/ingress-nginx
+helm repo update
+```
+
+> bash
+
+```bash
+# install the nginx chart
+helm install ingress-nginx stable/ingress-nginx \
+ --set controller.replicaCount=2 \
+ --set controller.nodeSelector."kubernetes\.io/os"=linux \
+ --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
+ --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux
+```
+
+> powershell
+
+```powershell
+# install the nginx chart
+helm install ingress-nginx stable/ingress-nginx `
+ --set controller.replicaCount=2 `
+ --set controller.nodeSelector."kubernetes\.io/os"=linux `
+ --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux `
+ --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux
+```
 
 ### Install Sitecore via Helm
 
@@ -152,7 +175,11 @@ helm template -f values.yaml -f values.secrets.yaml -s templates/secrets-class.y
 helm template -f values.yaml -f values.secrets.yaml -s templates/mssql-init.yaml . | kubectl apply -f -
 ```
 
-Wait for the Job to complete before continuing.
+Wait for the Job to complete before continuing. Check the status by running the following:
+
+```powershell
+kubectl get job mssql-init -o wide
+```
 
 Execute SQL script to confirm and establish the SQL logins and users. Use the Azure Portal to get the SQL Server info and user/password from the Key Vault.
 
@@ -187,14 +214,6 @@ id.globalhost
 
 As part of this process, the client machine's IP address is allowed access to the Azure SQL Server. For privacy and security reasons, it is recommended to remove that firewall rule using the Azure Portal.
 
-## Addons
-
-## Security
-
-## Testing
-
-## Retail Materials
-
 ## Architecture
 
 ### AKS Reference Architecture
@@ -203,8 +222,6 @@ As part of this process, the client machine's IP address is allowed access to th
 
 ![AKS Reference Architecture](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/images/baseline-architecture.svg)
 
-
-## Solution Components
 
 ### Trademarks
 
