@@ -15,3 +15,9 @@ variable "user_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "secrets_file" {
+  description = "Path to secrets yml file relative to path.module"
+  type        = string
+  default     = "/../kubernetes/sitecore_10_3/xm1/values.secrets.yaml"
+}

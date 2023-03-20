@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: id
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
+spec:
+  selector:
+    app: id
+  ports:
+  - protocol: TCP
+    port: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: id
+  labels:
+    app: id
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: id
+  template:
+    metadata:
+      labels:
+        app: id
+    spec:
+      nodeSelector:
+        kubernetes.io/os: windows
+      containers:
+      - name: sitecore-xm1-id
+        image: '{{ .Values.id.registry }}/{{ .Values.id.image }}:{{ .Values.id.tag }}'
+        ports:
+        - containerPort: 80
+        env:
+        - name: Database_Server
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-database-server-name
+        - name: Core_Database_Username
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-core-database-username
+        - name: Core_Database_Password
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-core-database-password
+        - name: Sitecore_Sitecore__IdentityServer__Clients__PasswordClient__ClientSecrets__ClientSecret1
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-identity-secret
+        - name: Sitecore_Sitecore__IdentityServer__CertificateRawData
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-identity-certificate
+        - name: Sitecore_Sitecore__IdentityServer__CertificateRawDataPassword
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-identity-certificate-password
+        - name: Sitecore_License
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-license
+        - name: Sql_Database_Prefix
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-database-prefix
+        - name: Sitecore_Sitecore__IdentityServer__SitecoreMemberShipOptions__ConnectionString
+          value: Data Source=$(Database_Server);Initial Catalog=$(Sql_Database_Prefix).Core;User ID=$(Core_Database_Username);Password=$(Core_Database_Password);
+        - name: Sitecore_Sitecore__IdentityServer__AccountOptions__PasswordRecoveryUrl
+          value: https://{{ .Values.cm.domain }}/sitecore/login?rc=1
+        - name: Sitecore_Sitecore__IdentityServer__Clients__DefaultClient__AllowedCorsOrigins__AllowedCorsOriginsGroup1
+          value: https://{{ .Values.cm.domain }}
+        - name: Sitecore_Sitecore__IdentityServer__PublicOrigin
+          value: https://{{ .Values.id.domain }}
+        livenessProbe:
+          httpGet:
+            path: /healthz/live
+            port: 80
+            httpHeaders:
+            - name: X-Kubernetes-Probe
+              value: Liveness
+          timeoutSeconds: 300
+          periodSeconds: 30
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 80
+            httpHeaders:
+            - name: X-Kubernetes-Probe
+              value: Startup
+          timeoutSeconds: 300
+          periodSeconds: 30
+          failureThreshold: 10
+        volumeMounts:
+        - mountPath: C:\Identity\logs
+          name: logs
+          subPath: id
+        - mountPath: C:\inetpub\wwwroot\App_Data\Secrets
+          name: secrets-store 
+        resources:
+          requests:
+            memory: 700Mi
+            cpu: 200m
+          limits:
+            memory: 1Gi
+            cpu: 300m
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: logs
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: keyvault-secretproviderclass
+      imagePullSecrets:
+      - name: sitecore-docker-registry

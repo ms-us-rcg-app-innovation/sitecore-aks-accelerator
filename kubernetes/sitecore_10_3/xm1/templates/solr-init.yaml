@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: solr-init
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/os: windows
+      imagePullSecrets:
+        - name: sitecore-docker-registry
+      containers:
+      - name: solr-init
+        image: '{{ .Values.solrInit.registry }}/{{ .Values.solrInit.image }}:{{ .Values.solrInit.tag }}'
+        env:
+        - name: SITECORE_SOLR_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-solr-connection-string
+        - name: SOLR_CORE_PREFIX_NAME
+          valueFrom:
+            secretKeyRef:
+              name: sitecore-secrets
+              key: sitecore-solr-core-prefix-name
+        volumeMounts:
+        - mountPath: C:\Secrets
+          name: secrets-store 
+      restartPolicy: Never
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: keyvault-secretproviderclass
+  backoffLimit: 5

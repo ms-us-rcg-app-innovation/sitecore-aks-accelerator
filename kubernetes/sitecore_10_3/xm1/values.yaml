@@ -1,0 +1,49 @@
+# Ref - https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret.html
+syncSecret:
+  enabled: true
+
+windows:
+  enabled: true
+
+keyVault:
+ identity: "8cf289f6-c5c8-4a86-b9d2-dd228c7d8339"
+ name: "sitecorelosg0"
+ tenantid: "3db015b1-2bb5-43d8-a173-007683abc495"
+ useVMManagedIdentity: "true"
+
+cd:
+  domain: cd.globalhost
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-cd
+  tag: 10.3-ltsc2019
+cm:
+  domain: cm.globalhost
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-cm
+  tag: 10.3-ltsc2019
+id:
+  domain: id.globalhost
+  registry: scr.sitecore.com
+  image: sxp/sitecore-id7
+  tag: 10.3-ltsc2019
+mssql:
+  registry: mcr.microsoft.com
+  image: mssql/server
+  tag: 2017-CU21-ubuntu-16.04
+mssqlInit:
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-mssql-init
+  tag: 10.3-ltsc2019
+redis:
+  registry: docker.io
+  image: redis
+  tag: 4.0.14-alpine
+solr:
+  registry: docker.io
+  image: solr
+  tag: 8.11.2
+solrInit:
+  registry: scr.sitecore.com
+  image: sxp/sitecore-xm1-solr-init
+  tag: 10.3-ltsc2019
+
