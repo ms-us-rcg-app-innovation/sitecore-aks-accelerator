@@ -30,10 +30,6 @@ Download the "Installation Guide for Production Environment with Kubernetes" doc
 choco install helm kubectl azure-cli terraform -y
 ```
 
-### Provide Sitecore License
-
-Place Sitecore license file named _sitecore-license.txt_ in repository root directory. This license must be a valid, compressed license. If not compressed, use /scripts/CompressLicense.ps1.
-
 ## Installation
 
 ### Bootstrap terraform by creating support infrastructure
@@ -103,6 +99,10 @@ terraform init `
 terraform plan -var="name=${name}" -var="location=${location}"
 terraform apply -var="name=${name}" -var="location=${location}" -auto-approve
 ```
+
+### Provide Sitecore License
+
+Update the _sitecore-license_ secret value in the newly provisioned Azure Key Vault to a valid, compressed license. If not compressed, use /src/scripts/CompressLicense.ps1.
 
 ### Connect to AKS and deploy sitecore yaml
 
