@@ -7,7 +7,7 @@ module "value" {
   depends_on = [
     azurerm_key_vault_access_policy.terraform_user,
     azurerm_key_vault_access_policy.key_vault_user
-  ]   
+  ]
 
   source = "./modules/key-vault-value"
 
@@ -51,7 +51,7 @@ module "password" {
 
   key_vault_id = azurerm_key_vault.default.id
   name         = each.key
-  
+
   for_each = {
     for secret in local.secrets_yaml_decoded.secrets :
     secret.name => secret

@@ -52,8 +52,8 @@ resource "azurerm_mssql_firewall_rule" "localclient" {
 
 # ref - https://github.com/hashicorp/terraform-provider-azurerm/issues/14849
 data "azurerm_public_ip" "cluster_outbound" {
-  name                = split("/",tolist(azurerm_kubernetes_cluster.default.network_profile[0].load_balancer_profile[0].effective_outbound_ips)[0])[8]
-  resource_group_name = split("/",tolist(azurerm_kubernetes_cluster.default.network_profile[0].load_balancer_profile[0].effective_outbound_ips)[0])[4]
+  name                = split("/", tolist(azurerm_kubernetes_cluster.default.network_profile[0].load_balancer_profile[0].effective_outbound_ips)[0])[8]
+  resource_group_name = split("/", tolist(azurerm_kubernetes_cluster.default.network_profile[0].load_balancer_profile[0].effective_outbound_ips)[0])[4]
 }
 
 resource "azurerm_mssql_firewall_rule" "cluster_access" {
@@ -67,7 +67,7 @@ module "dbelasticpool" {
   depends_on = [
     azurerm_key_vault_access_policy.terraform_user
   ]
-  
+
   source = "./modules/key-vault-value"
 
   key_vault_id = azurerm_key_vault.default.id
@@ -80,7 +80,7 @@ resource "mssql_login" "database" {
     azurerm_mssql_firewall_rule.localclient
   ]
 
-  for_each        = toset(local.databases)
+  for_each = toset(local.databases)
 
   server {
     host = azurerm_mssql_server.default.fully_qualified_domain_name
