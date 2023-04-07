@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-# About The Project
+# Sitecore AKS Accelerator
 This project contains resources, documentation, infrastructure as code, and guidelines for best practices deploying a customized Sitecore 10 application into AKS and Azure SQL Database. Documenation for this process is shared across existing accelerators and documentation provided by Sitecore on best practices for deploying containerized version of Sitecore 10.
 
 ## Contents
